@@ -9,7 +9,7 @@ get('/registerform', 'controllers/registerform.php'); //PARA PROBAR, BORRAR DESP
 post('/login', 'controllers/login.php');
 post('/logout', 'controllers/logout.php');
 post('/register', 'controllers/register.php');
-
+post('/visits', 'controllers/visits.php');
 
 post('/user/$id', 'views/user');
 
