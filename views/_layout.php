@@ -9,6 +9,6 @@
 
 </head>
 <body>
-     
+     <?php include $content; ?>
 </body>
 </html>

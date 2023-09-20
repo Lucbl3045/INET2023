@@ -1,4 +1,6 @@
 <?php
 
 Auth::user();
-include "views/index.php";
+$content="views/index.php";
+include "views/_nav.php";
+exit;
