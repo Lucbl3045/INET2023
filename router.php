@@ -59,6 +59,8 @@ function route($route, $path_to_include)
 			call_user_func_array($callback, []);
 			exit();
 		}
+		require_once __DIR__ . "/middleware/env.php";
+		include_once __DIR__ . "/middleware/DB.php";
 		include_once __DIR__ . "/$path_to_include";
 		exit();
 	}
