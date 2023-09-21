@@ -11,6 +11,10 @@ post('/logout', 'controllers/logout.php');
 post('/register', 'controllers/register.php');
 post('/visits', 'controllers/visits.php');
 post('/admin', 'controllers/admin.php');
+post('/editrow/$table/$id', 'controllers/editrow.php');
+post('/deleterow/$table/$id', 'controllers/deleterow.php');
+post('/resetrow/$table/$id', 'controllers/resetrow.php');
+post('/changerow/$table/$id', 'controllers/changerow.php');
 
 post('/user/$id', 'views/user');
 

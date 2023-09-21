@@ -51,6 +51,17 @@ class DB {
         return $stmt->fetchAll();
     }
 
+    static function  getTableColumnsTypes($table){
+        GLOBAL $pdo;
+        $stmt = $pdo->query("SHOW columns FROM $table");
+        $columnsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $columnTypes=[];
+        foreach ($columnsData as $col){
+            $columnTypes[$col['Field']]=explode('(',$col['Type'])[0];
+        } 
+        return $columnTypes;
+    }
+
     static function getTableColumns($table){
         GLOBAL $pdo;
         $stmt = $pdo->query("SHOW columns FROM $table");
@@ -68,16 +79,17 @@ class DB {
         $whereClause='';
         $limitClause='LIMIT '. $rowsPerPage*$page . ", $rowsPerPage";
         $fieldsset=0;
-        if (isset($_GET["query"])){
+        if (isset($searchQuery)){
             foreach( $columnNames as $colName){
                 $whereClause.= $fieldsset ? "OR " : 'WHERE ';		
-                $whereClause.="({$colName} LIKE '%?%' ) "; 
+                $whereClause.="({$colName} LIKE ? ) "; 
                 $fieldsset++;
             }
         }
         $lengthStmt = $pdo->prepare($countClause.$whereClause);
         $resultStmt = $pdo->prepare($selectClause.$whereClause.$limitClause);
-        if (isset($_GET["query"])){
+        if (isset($searchQuery)){
+            $searchQuery = "%".$searchQuery."%";
             $repeatedQuery=array_fill(0, count($columnNames), $searchQuery);
             $lengthStmt->execute($repeatedQuery);
             $resultStmt->execute($repeatedQuery);
@@ -88,6 +100,36 @@ class DB {
         $length = $lengthStmt->fetchColumn();
         $results = $resultStmt->fetchAll(PDO::FETCH_ASSOC);
         return [$length, $results];
+    }
+
+    static function fetchRowFromTable($id, $table, $condRow){
+        GLOBAL $pdo;
+        $stmt = $pdo->prepare("SELECT * FROM $table WHERE $condRow = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    static function deleteRowFromTable($id, $table, $condRow){
+        GLOBAL $pdo;
+        $stmt = $pdo->prepare("DELETE FROM $table WHERE $condRow = ?");
+        $stmt->execute([$id]);
+    }
+
+    static function updateRowFromTable($table, $postVars){
+        GLOBAL $pdo;
+        $postVars[] = $postVars[0];
+        $columnNames = self::getTableColumns($table);
+        $idColumnName = $columnNames[0];
+    
+        $updatequery="UPDATE {$table} SET ";
+        foreach ($columnNames as $colName){
+            $updatequery.="{$colName}= ? , ";
+        }
+        $updatequery=substr($updatequery, 0,  strlen($updatequery)-2);
+        $updatequery.=" WHERE {$idColumnName}= ? ";
+        $stmt = $pdo->prepare($updatequery);
+        $stmt->execute($postVars);
+        
     }
 
 }

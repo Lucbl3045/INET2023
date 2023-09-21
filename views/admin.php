@@ -9,8 +9,8 @@
 	</select>
 </form>
 
-<form action="" class="my-5 mx-5">
-    <input type='text' name='query' value="<?=$searchQuery || ""?>" placeholder="🔍 Búsqueda" class="block w-full p-4  text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" >
+<form hx-post='/admin' hx-target='#main' class="my-5 mx-5">
+    <input type='text' name='query' value="<?=$searchQuery || ""?>" placeholder="🔍 Búsqueda" class="block w-full p-4  text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 " >
 	<input type='hidden' name='table' value='<?= $table ?>'>
 	<input type='hidden' name='page' value=0>
 	<input type='submit' class="hidden">
@@ -27,12 +27,12 @@
 
 
 <div class="">
-    <div class="bg-slate-50 rounded-xl mt-5 mx-5 p-3 border-blue-500 border ">
+    <div class="bg-slate-50 rounded-xl mt-5 mx-5 p-3 border-blue-500 border overflow-auto">
         <table class="table-fixed">
         <thead>
             <tr id="tablenames">
 	        <?php foreach ( $columnNames as $column ){ ?>
-            <th class="border-b font-medium py-3.5 px-auto text-gray-800 text-center "><?= $column ?></th>
+            <th class="border-b font-bold py-3.5 px-auto text-gray-800 text-center "><?= $column ?></th>
 		    <?php } ?>
             </tr>
         </thead>
@@ -40,15 +40,15 @@
             <?php foreach($rows as $row){ ?>
             <tr id="r<?=reset($row)?>">
 		        <?php foreach ($columnNames as $column) {?>
-                <td class="font-medium py-3.5 px-5 text-gray-700 text-left">
+                <td class="font-medium py-3.5 px-5 text-gray-700  text-left">
                     <?= $row[$column] ?>
                 </td>
 		        <?php } ?>
-                <td class="font-medium py-3.5 px-5 text-gray-700 text-left">
-                <button onclick="editrow(<?= reset($row) ?>)">✏️</button>
+                <td class="font-medium py-3.5 px-5 text-gray-700  text-left">
+                <button hx-post='/editrow/<?=$table?>/<?=reset($row)?>' hx-target='#r<?=reset($row)?>' hx-swap='outerHTML' class="rounded-md bg-blue-400 p-2">✏️</button>
                 </td>
-                <td class="font-medium py-3.5 px-5 text-gray-700 text-left">
-                <button onclick="delrow(<?= reset($row) ?>)">❌</button>
+                <td class="font-medium py-3.5 px-5 text-gray-700  text-left ">
+                <button hx-post='/deleterow/<?=$table?>/<?=reset($row)?>' hx-target='#r<?=reset($row)?>' hx-swap='outerHTML' class="rounded-md bg-blue-400 p-2">❌</button>
                 </td>
 
             </tr>

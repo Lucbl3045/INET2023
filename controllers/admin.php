@@ -14,10 +14,11 @@ if (isset($_POST["page"])){
 } else {
     $page="0";
 }
+
 if (isset($_POST["query"])){
-    $searchQuery=intval($_POST["query"]);
+    $searchQuery=$_POST["query"];
 } else {
-    $searchQuery="0";
+    $searchQuery=null;
 }
 
 $rowsPerPage=10;
@@ -54,6 +55,7 @@ if ($page!=$pageCount-1){
 }
 
 $columnNames = DB::getTableColumns($table); 
+
 
 $content="views/admin.php";
 include "views/_layout.php";
