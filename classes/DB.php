@@ -51,4 +51,43 @@ class DB {
         return $stmt->fetchAll();
     }
 
+    static function getTableColumns($table){
+        GLOBAL $pdo;
+        $stmt = $pdo->query("SHOW columns FROM $table");
+        $columnsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $columnNames = array_map(fn($x):string => $x['Field'], $columnsData);
+        return $columnNames;
+    }
+
+    static function getPage($table, $searchQuery, $page=0, $rowsPerPage=10){
+        GLOBAL $pdo;
+        $columnNames = self::getTableColumns($table);
+
+        $selectClause="SELECT * FROM $table ";
+        $countClause = "SELECT count(*) FROM $table ";
+        $whereClause='';
+        $limitClause='LIMIT '. $rowsPerPage*$page . ", $rowsPerPage";
+        $fieldsset=0;
+        if (isset($_GET["query"])){
+            foreach( $columnNames as $colName){
+                $whereClause.= $fieldsset ? "OR " : 'WHERE ';		
+                $whereClause.="({$colName} LIKE '%?%' ) "; 
+                $fieldsset++;
+            }
+        }
+        $lengthStmt = $pdo->prepare($countClause.$whereClause);
+        $resultStmt = $pdo->prepare($selectClause.$whereClause.$limitClause);
+        if (isset($_GET["query"])){
+            $repeatedQuery=array_fill(0, count($columnNames), $searchQuery);
+            $lengthStmt->execute($repeatedQuery);
+            $resultStmt->execute($repeatedQuery);
+        } else {
+            $lengthStmt->execute();
+            $resultStmt->execute();
+        }
+        $length = $lengthStmt->fetchColumn();
+        $results = $resultStmt->fetchAll(PDO::FETCH_ASSOC);
+        return [$length, $results];
+    }
+
 }

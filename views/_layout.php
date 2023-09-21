@@ -9,6 +9,11 @@
 
 </head>
 <body>
-     <?php include $content; ?>
+    <?php if (isset($includeNav) && $includeNav) include 'partials/header.php'; ?>
+    
+        <?php include $content; ?>
+    
+    <?php if (isset($includeNav) && $includeNav) include 'partials/footer.php'; ?>
+
 </body>
 </html>

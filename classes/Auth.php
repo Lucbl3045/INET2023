@@ -17,8 +17,9 @@ class Auth {
             exit;
         }
         if (!isset($_SESSION["isAdmin"])){
+            $includeNav=true;
             $content="views/index.php";
-            include "views/_nav.php";
+            include "views/_layout.php";
             exit;
         }
 
