@@ -1,10 +1,7 @@
 <?php
 Auth::admin();
 
-$dataTables = ["pacientes", "dispositivos", 
-               "especialidades", "llamadas", 
-               "medicos", "visitas", "zonas"];
-if (isset($_POST["table"]) && in_array($_POST["table"], $dataTables)){
+if (isset($_POST["table"]) && in_array($_POST["table"], DB::$dataTables)){
     $table=$_POST["table"];
 } else {
     $table="pacientes";
@@ -20,7 +17,6 @@ if (isset($_POST["query"])){
 } else {
     $searchQuery=null;
 }
-
 $rowsPerPage=10;
 [$length, $rows] = DB::getPage($table, $searchQuery, $page, $rowsPerPage);
 $pageCount=ceil($length/$rowsPerPage);
@@ -48,8 +44,7 @@ if ($pageCount!=1){
         $pageNumbers[] = $i;
     }
 }
-
-if ($page!=$pageCount-1){
+if ($page!=$pageCount-1 && $pageCount!=0){
 	$pageSymbols=[...$pageSymbols, ">", ">>"];
 	$pageNumbers=[...$pageNumbers, $page+1, $pageCount-1];
 }

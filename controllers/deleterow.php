@@ -1,9 +1,6 @@
 <?php
 Auth::admin();
-$dataTables = ["pacientes", "dispositivos", 
-               "especialidades", "llamadas", 
-               "medicos", "visitas", "zonas"];
-if (isset($table) && in_array($table, $dataTables)){
+if (isset($table) && in_array($table, DB::$dataTables)){
     //
 } else {
     throw new Exception("wrong table");

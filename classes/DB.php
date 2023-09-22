@@ -1,6 +1,11 @@
 <?php
 
 class DB {
+
+    static $dataTables = ["pacientes", "dispositivos", 
+                          "llamadas", "usuarios",
+                          "medicos",  "zonas"];
+
     static function userLogin($id){
         GLOBAL $pdo;
         $stmt = $pdo->prepare("SELECT contrasenia FROM usuarios WHERE usuarioID = ?");
@@ -17,25 +22,27 @@ class DB {
 
     static function register($user, $hash, $isAdmin){
         GLOBAL $pdo;
-        return $pdo->prepare("INSERT INTO usuarios VALUES(?, ?, ?)")
+        $pdo->prepare("INSERT INTO usuarios VALUES(?, ?, ?)")
             ->execute([$user, $hash, $isAdmin]);
+        return $pdo->lastInsertId();
     }
 
-    static function getCurrentVisits($userID=false){
-        return self::getVisits(false, $userID);
-    }
-    static function getPreviousVisits($userID=false){
-        return self::getVisits(true, $userID);
-    }
-
-    static function getVisits($isDone, $userID=false){
+    static function getCalls($userID=false){
         GLOBAL $pdo;
-        $isnull = $isDone ? "NOT" : "";
-        $query="SELECT * FROM visitas 
-                INNER JOIN medicoDeVisita ON visitas.visitaID = medicoDeVisita.visitaID 
-                INNER JOIN medicos ON medicos.medicoID = medicoDeVisita.medicoID 
+        $query="SELECT 
+                CONCAT(pacientes.nombre, ' ', pacientes.apellido) as nombrePaciente, 
+                tiempoDeLlamada, 
+                tiempoDeRespuesta, 
+                CONCAT(nombreDispositivo, ' en ', ubicacion) as nombreDispositivo, 
+                nivelDeEmergencia 
+                FROM llamadas 
+                INNER JOIN medicos ON medicos.medicoID = llamadas.medicoQueAtendioID 
                 INNER JOIN usuarios ON usuarios.usuarioID = medicos.usuarioID 
-                WHERE visitas.tiempoSalida IS $isnull NULL";
+                INNER JOIN pacientes ON pacientes.pacienteID=llamadas.pacienteID 
+                INNER JOIN dispositivos ON dispositivos.dispositivoID = llamadas.dispositivoDeLlamadaID 
+                INNER JOIN zonas ON zonas.zonaID = dispositivos.zonaID;
+                ";
+                
         if ($userID === false){
             $stmt = $pdo->prepare($query);
             $stmt->execute();
@@ -74,7 +81,16 @@ class DB {
         GLOBAL $pdo;
         $columnNames = self::getTableColumns($table);
 
-        $selectClause="SELECT * FROM $table ";
+        $selectClause="SELECT ";
+        foreach($columnNames as $col){
+            if ($col!=="contrasenia"){
+                $selectClause.=" $col , ";
+            }
+        }
+        $selectClause=substr($selectClause, 0,  strlen($selectClause)-2);
+
+
+        $selectClause.=" FROM $table ";
         $countClause = "SELECT count(*) FROM $table ";
         $whereClause='';
         $limitClause='LIMIT '. $rowsPerPage*$page . ", $rowsPerPage";
@@ -123,12 +139,42 @@ class DB {
     
         $updatequery="UPDATE {$table} SET ";
         foreach ($columnNames as $colName){
-            $updatequery.="{$colName}= ? , ";
+            if ($colName!=="contrasenia"){
+                $updatequery.="{$colName}= ? , ";
+            }
         }
         $updatequery=substr($updatequery, 0,  strlen($updatequery)-2);
         $updatequery.=" WHERE {$idColumnName}= ? ";
         $stmt = $pdo->prepare($updatequery);
         $stmt->execute($postVars);
+        
+    }
+
+
+
+    static function getZones($fetchWhat){
+        GLOBAL $pdo;
+        
+        $rows="nombre";
+        if ($fetchWhat === PDO::FETCH_KEY_PAIR){
+            $rows = "$rows, zonaID";
+        }
+        $stmt = $pdo->prepare("SELECT $rows FROM zonas");
+        $stmt->execute();
+        return $stmt->fetchAll($fetchWhat);
+    }
+
+    static function getZonesList(){
+        return self::getZones(PDO::FETCH_COLUMN);
+    }
+    static function getZonesAssoc(){
+        return self::getZones(PDO::FETCH_KEY_PAIR);
+    }
+
+    static function addMedic($dni, $fName, $lName, $userID, $zoneID){
+        GLOBAL $pdo;
+        $pdo->prepare("INSERT INTO medicos VALUES(null, ?, ?, ?, ?, ?)")
+            ->execute([$dni, $fName, $lName, $userID, $zoneID]);
         
     }
 

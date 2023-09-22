@@ -1,16 +1,15 @@
 <form hx-post="/admin" hx-target="#main" hx-trigger="change" class="my-5 mx-5">
 	<select name="table" class="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
     <?php
-	foreach($dataTables as $dataTable){ ?>
+	foreach(DB::$dataTables as $dataTable){ ?>
 		<option value='<?=$dataTable?>' <?= $dataTable === $table ? ' selected':'' ?> >
             <?=$dataTable?> 
         </option>
 	<?php } ?>
 	</select>
 </form>
-
 <form hx-post='/admin' hx-target='#main' class="my-5 mx-5">
-    <input type='text' name='query' value="<?=$searchQuery || ""?>" placeholder="🔍 Búsqueda" class="block w-full p-4  text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 " >
+    <input type='text' name='query' value="<?=isset($searchQuery) ? $searchQuery : ""?>" placeholder="🔍 Búsqueda" class="block w-full p-4  text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 " >
 	<input type='hidden' name='table' value='<?= $table ?>'>
 	<input type='hidden' name='page' value=0>
 	<input type='submit' class="hidden">
@@ -18,9 +17,14 @@
 
 <div class="mx-5 my-5">
 <?php for ($i = 0 ; $i < count($pageSymbols) ; $i++) { ?>
-    <a hx-target="#main" hx-post='/admin?table=<?=$table?>&query=<?=$searchQuery?>&page=<?=$pageNumbers[$i]?>'> 
-        <?= $pageSymbols[$i] ?> 
-    </a><span>&nbsp;</span>
+    <form class="inline" hx-target="#main" hx-post='/admin'>
+        <input type="hidden" name='query'  value='<?=$searchQuery?>'>
+        <input type="hidden" name='page'  value='<?=$pageNumbers[$i]?>'>
+        <input type="hidden" name='table'  value='<?=$table?>'>
+        <button type="submit" class="py-1 px-3 ml-1 rounded-sm bg-blue-400 text-white"> 
+            <?= $pageSymbols[$i] ?> 
+        </button><span>&nbsp;</span>
+    </form>
 <?php } ?>
 </div>
 
@@ -31,19 +35,21 @@
         <table class="table-fixed">
         <thead>
             <tr id="tablenames">
-	        <?php foreach ( $columnNames as $column ){ ?>
-            <th class="border-b font-bold py-3.5 px-auto text-gray-800 text-center "><?= $column ?></th>
-		    <?php } ?>
+	        <?php foreach ( $columnNames as $column ){ 
+                if ($column!=="contrasenia"){?>
+            <th class="border-b font-bold py-3.5 pl-3 text-gray-800 text-center "><?= $column ?></th>
+		    <?php }} ?>
             </tr>
         </thead>
         <tbody>
             <?php foreach($rows as $row){ ?>
             <tr id="r<?=reset($row)?>">
-		        <?php foreach ($columnNames as $column) {?>
+		        <?php foreach ($columnNames as $column){
+                    if ($column!=="contrasenia"){?>
                 <td class="font-medium py-3.5 px-5 text-gray-700  text-left">
-                    <?= $row[$column] ?>
+                    <?=$row[$column]?>
                 </td>
-		        <?php } ?>
+		        <?php }} ?>
                 <td class="font-medium py-3.5 px-5 text-gray-700  text-left">
                 <button hx-post='/editrow/<?=$table?>/<?=reset($row)?>' hx-target='#r<?=reset($row)?>' hx-swap='outerHTML' class="rounded-md bg-blue-400 p-2">✏️</button>
                 </td>

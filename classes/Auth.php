@@ -47,8 +47,9 @@ class Auth {
 
     static function register($user, $password, $isAdmin){
         self::startIfNot();
+        self::admin();
         $hash = password_hash($password, PASSWORD_DEFAULT);
-        DB::register($user, $hash, $isAdmin);
+        return DB::register($user, $hash, $isAdmin);
     }
 
 

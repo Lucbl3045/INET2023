@@ -1,9 +1,6 @@
 <?php
 Auth::admin();
-$dataTables = ["pacientes", "dispositivos", 
-               "especialidades", "llamadas", 
-               "medicos", "visitas", "zonas"];
-if (isset($table) && in_array($table, $dataTables)){
+if (isset($table) && in_array($table, DB::$dataTables)){
     //
 } else {
     throw new Exception("wrong table");
@@ -20,7 +17,9 @@ $idColumnName = $columnNames[0];
 
 $postVars = [];
 foreach ($columnNames as $colName){
-    $postVars[] = $_POST[$colName] === "" ? null : $_POST[$colName] ;
+    if ($colName!=="contrasenia"){
+        $postVars[] = $_POST[$colName] === "" ? null : $_POST[$colName] ;
+    }
 }
 
 DB::updateRowFromTable($table, $postVars);
