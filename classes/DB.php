@@ -6,6 +6,7 @@ class DB {
                           "llamadas", "usuarios",
                           "medicos",  "zonas"];
 
+
     static function userLogin($id){
         GLOBAL $pdo;
         $stmt = $pdo->prepare("SELECT contrasenia FROM usuarios WHERE usuarioID = ?");
@@ -193,6 +194,84 @@ class DB {
         $pdo->prepare("INSERT INTO medicos VALUES(null, ?, ?, ?, ?, ?)")
             ->execute([$dni, $fName, $lName, $userID, $zoneID]);
         
+    }
+
+    static function avgResponseTime($initDate, $endDate, $zone, $origin, $medic){
+        GLOBAL $pdo;
+        [$whereclause, $params] = DB::genWhereForStats($initDate, $endDate, $zone, $origin, $medic);
+        $query = "SELECT AVG(tiempoDeRespuesta-tiempoDeLlamada) ";
+        $query.=DB::$fromQueryForStats.$whereclause;
+        
+        $stmt = $pdo->prepare($query);
+        $stmt->execute($params);
+        return $stmt->fetchColumn();
+    }
+
+    static function amountOfResponses($initDate, $endDate, $zone, $origin, $medic){
+        GLOBAL $pdo;
+        [$whereclause, $params] = DB::genWhereForStats($initDate, $endDate, $zone, $origin, $medic);
+        $query = "SELECT COUNT(*) ";
+        $query.=DB::$fromQueryForStats.$whereclause;
+        
+        $stmt = $pdo->prepare($query);
+        $stmt->execute($params);
+        return $stmt->fetchColumn();
+    }
+
+    static function responsesPerLevel($initDate, $endDate, $zone, $origin, $medic){
+        return self::responsesPerX($initDate, $endDate, $zone, $origin, $medic, "nivelDeEmergencia");
+    }
+
+    static function responsesPerOrigin($initDate, $endDate, $zone, $medic){
+        return self::responsesPerX($initDate, $endDate, $zone, false, $medic, "ubicacion");
+    }
+
+    static function responsesPerZone($initDate, $endDate, $origin, $medic){
+        return self::responsesPerX($initDate, $endDate, false, $origin, $medic, "zonaID");
+    }
+
+    private static function responsesPerX($initDate, $endDate, $zone, $origin, $medic, $perWhat){
+        GLOBAL $pdo;
+        [$whereclause, $params] = self::genWhereForStats($initDate, $endDate, $zone, $origin, $medic);
+        $query = "SELECT $perWhat, COUNT(*) as count";
+        $query.=self::$fromQueryForStats.$whereclause;
+        $query.="GROUP BY $perWhat";
+        
+        $stmt = $pdo->prepare($query);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+    }
+
+
+    private static $fromQueryForStats=" FROM llamadas INNER JOIN dispositivos ON dispositivos.dispositivoID = dispositivoDeLlamadaID ";
+    
+
+    static function genWhereForStats($initDate, $endDate, $zone, $origin, $medic){
+        $clause = "WHERE 1 ";
+        $params=[];
+        if ($initDate!==false){
+            $clause .= " AND ? < tiempoDeLlamada ";
+            $params[]=$initDate;
+        }
+
+        if ($endDate!==false){
+            $clause .= " AND tiempoDeRespuesta < ? ";
+            $params[]=$endDate;
+        }
+
+        if ($zone!==false){
+            $clause .= " AND zonaID = ? ";
+            $params[]=$zone;
+        }
+        if ($origin!==false){
+            $clause .= " AND ubicacion = ? ";
+            $params[]=$origin;
+        }
+        if ($medic!==false){
+            $clause .= " AND medicoQueAtendioID = ? ";
+            $params[]=$medic;
+        }
+        return [$clause, $params];
     }
 
 }

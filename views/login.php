@@ -3,7 +3,9 @@
     <div class="w-full bg-white rounded-lg shadow mt-0 max-w-md">
       <div class="p-6 space-y-4 p-8">
         <div id="errors"></div>
-        <div>
+        <div class="flex items-center justify-center">
+          <img class="fill-current h-8 w-8 mr-2" width="54" height="54" viewBox="0 0 54 54" src="img/azul.png" >
+
           <p class="text-center text-3xl font-bold text-blue-600"> Código Azul</p><!--ACA VA LOGO-->
         </div>
         <h1 class="text-2xl font-bold  text-black">
