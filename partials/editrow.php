@@ -15,7 +15,7 @@
         </select>
     <?php continue; }
     if ($colName=='nivelDeEmergencia'){ ?>
-        <select name="ubicacion" class="includefor<?=$id?> w-3/4 items-center p-1 m-1 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
+        <select name="nivelDeEmergencia" class="includefor<?=$id?> w-3/4 items-center p-1 m-1 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
             <option <?=$row[$colName]==="1" ? "selected" : ""?> value="1" class="items-center p-1 m-1 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50">1</option>
             <option <?=$row[$colName]==="2" ? "selected" : ""?> value="2" class="items-center p-1 m-1 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50">2</option>
             <option <?=$row[$colName]==="3" ? "selected" : ""?> value="3" class="items-center p-1 m-1 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50">3</option>

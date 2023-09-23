@@ -37,7 +37,7 @@
     <span>Llamadas por Nivel de Emergencia</span><br>
     <table border=1>
         <tr>
-            <th>Zona</th>
+            <th>Nivel</th>
             <th>Llamadas</th>
         </tr>
         <?php foreach($perLevels as $key=>$name){ ?>
@@ -51,7 +51,7 @@
     <span>Llamadas por zona</span><br>
     <table border=1>
         <tr>
-            <th>Nivel</th>
+            <th>Zona</th>
             <th>Llamadas</th>
         </tr>
         <?php foreach($perZones as $key=>$name){ ?>
