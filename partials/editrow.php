@@ -30,7 +30,10 @@
         case 'enum':
             ?><input name='<?=$colName?>' type='text' value="<?=$row[$colName]?>" class="includefor<?=$id?> w-3/4 items-center p-1 m-1 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"><?php
             break;
+            ?><input name='<?=$colName?>' type='<?=$colType?>' value="<?=$row[$colName]?>" class="includefor<?=$id?> w-3/4 items-center p-1 m-1 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"><?php
         case 'datetime':
+            ?><input name='<?=$colName?>' type='datetime-local' value="<?=$row[$colName]?>" class="includefor<?=$id?> w-3/4 items-center p-1 m-1 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"><?php
+            break;
         case 'date':
             ?><input name='<?=$colName?>' type='<?=$colType?>' value="<?=$row[$colName]?>" class="includefor<?=$id?> w-3/4 items-center p-1 m-1 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"><?php
             break;

@@ -19,9 +19,11 @@ post('/newrow/$table', 'controllers/newrow.php');
 post('/addrow/$table', 'controllers/addrow.php');
 post('/reports', 'controllers/reports.php');
 
+get('/csvexport/$table', 'controllers/csvexport.php');
+
 post('/medicOptions', 'controllers/medicOptions.php');
 post('/empty', 'partials/empty.php');
-
+/*
 post('/user/$id', 'views/user');
 
 
@@ -29,7 +31,7 @@ post('/user/$id', 'views/user');
 get('/callback/$name', function($name){
   echo "Callback executed. The name is $name";
 });
-
+*/
 
 
 

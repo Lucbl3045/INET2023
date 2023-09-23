@@ -70,4 +70,8 @@
     <div>
         <a hx-post='/newrow/<?=$table?>' hx-target="#rowsbody" hx-swap="beforeend" class="bg-blue-400 inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-blue-500 mt-4 mt-0 ml-20">Agregar</a>
     </div>
- <?php }
+ <?php } ?>
+
+<div>
+    <a href="/csvexport/<?=$table?>" download="export.csv" class="bg-blue-400 inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-blue-500 mt-4 mt-0 ml-20">CSV</a>
+</div>

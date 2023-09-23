@@ -119,6 +119,27 @@ class DB {
         return [$length, $results];
     }
 
+
+    static function getAllEntries($table){
+        GLOBAL $pdo;
+        $columnNames = self::getTableColumns($table);
+        $returnCols=[];
+        $selectClause="SELECT ";
+        foreach($columnNames as $col){
+            if ($col!=="contrasenia"){
+                $selectClause.=" $col , ";
+                $returnCols[]=$col;
+            }
+        }
+        $selectClause=substr($selectClause, 0,  strlen($selectClause)-2);
+        $selectClause.=" FROM $table ";
+
+        $resultStmt = $pdo->prepare($selectClause);
+        $resultStmt->execute();
+        $results = $resultStmt->fetchAll(PDO::FETCH_ASSOC);
+        return [$returnCols, $results];
+    }
+
     static function fetchRowFromTable($id, $table, $condRow){
         GLOBAL $pdo;
         $stmt = $pdo->prepare("SELECT * FROM $table WHERE $condRow = ?");

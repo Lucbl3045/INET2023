@@ -1,6 +1,7 @@
 {
     "require": {
-        "vlucas/phpdotenv": "^5.5"
+        "vlucas/phpdotenv": "^5.5",
+        "league/csv": "9.0"
     },
     "autoload": {
         "classmap": ["classes"]
