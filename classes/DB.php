@@ -243,12 +243,12 @@ class DB {
         return self::responsesPerX($initDate, $endDate, $zone, $origin, $medic, "nivelDeEmergencia");
     }
 
-    static function responsesPerOrigin($initDate, $endDate, $zone, $medic){
-        return self::responsesPerX($initDate, $endDate, $zone, false, $medic, "ubicacion");
+    static function responsesPerOrigin($initDate, $endDate, $zone, $origin, $medic){
+        return self::responsesPerX($initDate, $endDate, $zone, $origin, $medic, "ubicacion");
     }
 
-    static function responsesPerZone($initDate, $endDate, $origin, $medic){
-        return self::responsesPerX($initDate, $endDate, false, $origin, $medic, "zonaID");
+    static function responsesPerZone($initDate, $endDate, $zone, $origin, $medic){
+        return self::responsesPerX($initDate, $endDate, $zone, $origin, $medic, "zonaID");
     }
 
     private static function responsesPerX($initDate, $endDate, $zone, $origin, $medic, $perWhat){

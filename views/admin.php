@@ -66,12 +66,21 @@
     </div>
 </div>
 
+<div>
+    <a href="/csvexport/<?=$table?>" download="export.csv" class="bg-blue-400 inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-blue-500 mt-4 mt-0 ml-20">Exportar CSV</a>
+</div>
+
 <?php if ($table!=="usuarios"){ ?>
     <div>
         <a hx-post='/newrow/<?=$table?>' hx-target="#rowsbody" hx-swap="beforeend" class="bg-blue-400 inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-blue-500 mt-4 mt-0 ml-20">Agregar</a>
     </div>
+    <form id='format' hx-encoding='multipart/form-data' hx-target='#main' hx-post='/csvimport/<?=$table?>' class=" w-min flex flex-col bg-slate-50 rounded-xl mt-5 mx-5 p-3 border-blue-500 border overflow-auto">
+        <label for="csv">Importar CSV en esta tabla</label>
+        <input type='file' name='csv'  class=" min-w-max bg-blue-400 inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-blue-500   ">
+        <input type='submit'  class=" min-w-max bg-blue-400 inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-blue-500 mt-4 ">
+    </form>
  <?php } ?>
 
-<div>
-    <a href="/csvexport/<?=$table?>" download="export.csv" class="bg-blue-400 inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-blue-500 mt-4 mt-0 ml-20">CSV</a>
-</div>
+
+
+

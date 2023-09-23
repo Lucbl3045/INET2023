@@ -4,7 +4,7 @@ Auth::admin();
 if (isset($_POST["table"]) && in_array($_POST["table"], DB::$dataTables)){
     $table=$_POST["table"];
 } else {
-    $table="pacientes";
+    $table= $table ?? "pacientes";
 }
 if (isset($_POST["page"])){
     $page=intval($_POST["page"]);

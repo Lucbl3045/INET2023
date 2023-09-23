@@ -20,6 +20,7 @@ post('/addrow/$table', 'controllers/addrow.php');
 post('/reports', 'controllers/reports.php');
 
 get('/csvexport/$table', 'controllers/csvexport.php');
+post('/csvimport/$table', 'controllers/csvimport.php');
 
 post('/medicOptions', 'controllers/medicOptions.php');
 post('/empty', 'partials/empty.php');
