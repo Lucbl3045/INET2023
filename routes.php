@@ -15,6 +15,8 @@ post('/editrow/$table/$id', 'controllers/editrow.php');
 post('/deleterow/$table/$id', 'controllers/deleterow.php');
 post('/resetrow/$table/$id', 'controllers/resetrow.php');
 post('/changerow/$table/$id', 'controllers/changerow.php');
+post('/newrow/$table', 'controllers/newrow.php');
+post('/addrow/$table', 'controllers/addrow.php');
 
 post('/medicOptions', 'controllers/medicOptions.php');
 post('/empty', 'partials/empty.php');

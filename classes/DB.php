@@ -151,6 +151,23 @@ class DB {
     }
 
 
+    static function createRowFromTable($table, $postVars){
+        GLOBAL $pdo;
+        $columnNames = self::getTableColumns($table);
+        $idColumnName = $columnNames[0];
+    
+        $updatequery="INSERT INTO {$table} VALUES( ";
+        foreach ($columnNames as $colName){
+            if ($colName!=="contrasenia"){
+                $updatequery.=" ? , ";
+            }
+        }
+        $updatequery=substr($updatequery, 0,  strlen($updatequery)-2). ') ';
+        $stmt = $pdo->prepare($updatequery);
+        $stmt->execute($postVars);
+        return  $pdo->lastInsertId();
+        
+    }
 
     static function getZones($fetchWhat){
         GLOBAL $pdo;
