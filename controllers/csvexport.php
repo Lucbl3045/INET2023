@@ -1,6 +1,7 @@
 <?php
 use League\Csv\Writer;
 
+Auth::admin();
 
 [$columnNames, $results] = DB::getAllEntries($table);
 

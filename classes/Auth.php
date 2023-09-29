@@ -1,26 +1,30 @@
 <?php
+
+class AuthException extends Exception {}
+
+
 class Auth {
     static function user(){
         self::startIfNot();
         if (!isset($_SESSION["id"])){
             $content="views/login.php";
             include "views/_layout.php";
-            exit;
+            throw new AuthException("Not logged in");
         }
-
     }
+    
     static function admin(){
         self::startIfNot();
         if (!isset($_SESSION["id"])){
             $content="views/login.php";
             include "views/_layout.php";
-            exit;
+            throw new AuthException("Not logged in");
         }
-        if (!isset($_SESSION["isAdmin"])){
+        if (!isset($_SESSION["isAdmin"]) || $_SESSION["isAdmin"]!==true){
+            
             $includeNav=true;
-            $content="views/index.php";
-            include "views/_layout.php";
-            exit;
+            include "controllers/calls.php";
+            throw new AuthException("Not an admin");
         }
 
     }

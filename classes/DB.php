@@ -158,7 +158,9 @@ class DB {
         $postVars[] = $postVars[0];
         $columnNames = self::getTableColumns($table);
         $idColumnName = $columnNames[0];
-    
+
+        $postVars = array_map("trim", $postVars);
+
         $updatequery="UPDATE {$table} SET ";
         foreach ($columnNames as $colName){
             if ($colName!=="contrasenia"){
@@ -177,6 +179,8 @@ class DB {
         GLOBAL $pdo;
         $columnNames = self::getTableColumns($table);
         $idColumnName = $columnNames[0];
+
+        $postVars = array_map("trim", $postVars);
     
         $updatequery="INSERT INTO {$table} VALUES( ";
         foreach ($columnNames as $colName){

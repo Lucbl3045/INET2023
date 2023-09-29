@@ -1,6 +1,8 @@
 <?php
 use League\Csv\Reader;
 
+Auth::admin();
+
 if (!isset($table)){
     exit;
 }
