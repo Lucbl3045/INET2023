@@ -37,6 +37,20 @@ class Auth {
             return false;
         }
     }
+    static function loginMobile($user,$password){
+        self::startIfNot();
+        $hash = DB::userLogin($user);
+        if ($hash===false){
+            return false;
+        }
+        if (password_verify($password, $hash)){
+            return $user;
+        }
+        else {
+            return false;
+        }
+    }
+
 
     static function logout(){
         self::startIfNot();

@@ -18,7 +18,7 @@ class DB {
         GLOBAL $pdo;
         $stmt = $pdo->prepare("SELECT esAdmin FROM usuarios WHERE usuarioID = ?");
         $stmt->execute([$id]);
-        return $stmt->fetchColumn() === 1;
+        return intval($stmt->fetchColumn()) === 1;
     }
 
     static function register($user, $hash, $isAdmin){
@@ -41,7 +41,7 @@ class DB {
                 INNER JOIN usuarios ON usuarios.usuarioID = medicos.usuarioID 
                 INNER JOIN pacientes ON pacientes.pacienteID=llamadas.pacienteID 
                 INNER JOIN dispositivos ON dispositivos.dispositivoID = llamadas.dispositivoDeLlamadaID 
-                INNER JOIN zonas ON zonas.zonaID = dispositivos.zonaID;
+                INNER JOIN zonas ON zonas.zonaID = dispositivos.zonaID
                 ";
                 
         if ($userID === false){
@@ -58,7 +58,25 @@ class DB {
         }
         return $stmt->fetchAll();
     }
-
+    static function getCallsMobile(){
+        GLOBAL $pdo;
+        $query="SELECT 
+                llamadaID,
+                CONCAT(pacientes.apellido, ', ', pacientes.nombre) as nombrePaciente, 
+                tiempoDeLlamada,  
+                CONCAT(nombreDispositivo, ', ', ubicacion) as nombreDispositivo, 
+                FROM llamadas 
+                INNER JOIN medicos ON medicos.medicoID = llamadas.medicoQueAtendioID 
+                INNER JOIN usuarios ON usuarios.usuarioID = medicos.usuarioID 
+                INNER JOIN pacientes ON pacientes.pacienteID=llamadas.pacienteID 
+                INNER JOIN dispositivos ON dispositivos.dispositivoID = llamadas.dispositivoDeLlamadaID 
+                INNER JOIN zonas ON zonas.zonaID = dispositivos.zonaID
+                ";
+                $stmt = $pdo->prepare($query);
+                $stmt->execute();
+                return $stmt->fetchAll();
+        
+    }
     static function  getTableColumnsTypes($table){
         GLOBAL $pdo;
         $stmt = $pdo->query("SHOW columns FROM $table");
